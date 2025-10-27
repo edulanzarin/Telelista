@@ -6,18 +6,20 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
 import java.util.UUID;
 
-@Data // do LOMBOK: cria getters, setters, construtores, etc. automaticamente
-@Entity // do JPA: avisa ao Spring que esta classe é uma tabela no banco de dados
-@Table(name = "itens_telegram") // define o nome da tabela no banco
+@Data
+@Entity
+@Table(name = "itens_telegram")
 public class ItemTelegram {
 
-    @Id // avisa que é o campo chave primária
-    @GeneratedValue(strategy = GenerationType.UUID) // gera um uuid aleatório
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     private String nome;
@@ -26,4 +28,8 @@ public class ItemTelegram {
 
     @Enumerated(EnumType.STRING)
     private ItemType tipo;
+
+    @ManyToOne
+    @JoinColumn(name = "dono_usuario_id", nullable = false)
+    private Usuario dono;
 }
