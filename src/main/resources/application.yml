@@ -1,0 +1,24 @@
+spring:
+  # --- Configuração do Banco de Dados H2 ---
+  datasource:
+    # Isso é CRUCIAL para que a API e o Console acessem o MESMO banco!
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password: "" # Senha em branco
+
+  # --- Configuração do JPA/Hibernate ---
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+
+  # --- Configuração do Console H2 ---
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+app:
+  jwt:
+    secret: "q8A!z%C*F-JaNdRfUjXn2r5u7x!A%D*G"
+    
+    expiration-ms: 86400000
