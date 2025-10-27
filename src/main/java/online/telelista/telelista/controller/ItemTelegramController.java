@@ -2,6 +2,7 @@ package online.telelista.telelista.controller;
 
 import online.telelista.telelista.dto.CreateItemRequest;
 import online.telelista.telelista.dto.ItemResponse;
+import online.telelista.telelista.dto.UpdateItemRequest;
 import online.telelista.telelista.model.ItemTelegram;
 import online.telelista.telelista.service.ItemTelegramService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,18 @@ public class ItemTelegramController {
         }
 
         ItemResponse response = new ItemResponse(itemOptional.get());
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ItemResponse> atualizarItem(
+            @PathVariable UUID id,
+            @RequestBody UpdateItemRequest itemRequest,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        ItemTelegram itemAtualizado = itemTelegramService.atualizarItem(id, itemRequest, userDetails);
+        ItemResponse response = new ItemResponse(itemAtualizado);
 
         return ResponseEntity.ok(response);
     }
