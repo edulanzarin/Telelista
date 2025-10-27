@@ -70,4 +70,14 @@ public class ItemTelegramController {
 
         return ResponseEntity.ok(response);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletarItem(
+            @PathVariable UUID id,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        itemTelegramService.deletarItem(id, userDetails);
+
+        return ResponseEntity.noContent().build();
+    }
 }
