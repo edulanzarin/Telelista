@@ -1,10 +1,13 @@
 package online.telelista.telelista.service;
 
 import online.telelista.telelista.dto.CreateItemRequest;
+import online.telelista.telelista.dto.UpdateItemRequest;
 import online.telelista.telelista.model.ItemTelegram;
 import online.telelista.telelista.model.Usuario;
 import online.telelista.telelista.repository.ItemTelegramRepository;
 import online.telelista.telelista.repository.UsuarioRepository;
+import online.telelista.telelista.exception.AccessDeniedException;
+import online.telelista.telelista.exception.ItemNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -51,5 +54,25 @@ public class ItemTelegramService {
     public Optional<ItemTelegram> buscarPorId(UUID id) {
 
         return itemTelegramRepository.findById(id);
+    }
+
+    public ItemTelegram atualizarItem(UUID id, UpdateItemRequest request, UserDetails userDetails) {
+
+        ItemTelegram item = itemTelegramRepository.findById(id)
+                .orElseThrow(() -> new ItemNotFoundException("Item não encontrado com ID: " + id));
+
+        String usernameLogado = userDetails.getUsername();
+        String usernameDono = item.getDono().getUsername();
+
+        if (!usernameLogado.equals(usernameDono)) {
+            throw new AccessDeniedException("Usuário não tem permissão para atualizar item com ID: " + id);
+        }
+
+        item.setNome(request.getNome());
+        item.setLink(request.getLink());
+        item.setDescricao(request.getDescricao());
+        item.setTipo(request.getTipo());
+
+        return itemTelegramRepository.save(item);
     }
 }
