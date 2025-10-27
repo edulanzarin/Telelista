@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.UUID;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/itens")
@@ -41,5 +43,18 @@ public class ItemTelegramController {
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(responseList);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ItemResponse> buscarItemPorId(@PathVariable UUID id) {
+        Optional<ItemTelegram> itemOptional = itemTelegramService.buscarPorId(id);
+
+        if (itemOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        ItemResponse response = new ItemResponse(itemOptional.get());
+
+        return ResponseEntity.ok(response);
     }
 }
