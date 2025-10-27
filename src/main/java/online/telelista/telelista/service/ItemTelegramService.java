@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ItemTelegramService {
@@ -44,5 +46,10 @@ public class ItemTelegramService {
         LocalDateTime dataAtual = LocalDateTime.now();
 
         return itemTelegramRepository.findAllOrderByActiveBoost(dataAtual);
+    }
+
+    public Optional<ItemTelegram> buscarPorId(UUID id) {
+
+        return itemTelegramRepository.findById(id);
     }
 }
