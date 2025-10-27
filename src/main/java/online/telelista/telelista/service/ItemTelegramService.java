@@ -75,4 +75,19 @@ public class ItemTelegramService {
 
         return itemTelegramRepository.save(item);
     }
+
+    public void deletarItem(UUID id, UserDetails userDetails) {
+
+        ItemTelegram item = itemTelegramRepository.findById(id)
+                .orElseThrow(() -> new ItemNotFoundException("Item não encontrado com ID: " + id));
+
+        String usernameLogado = userDetails.getUsername();
+        String usernameDono = item.getDono().getUsername();
+
+        if (!usernameLogado.equals(usernameDono)) {
+            throw new AccessDeniedException("Usuário não tem permissão para deletar item com ID: " + id);
+        }
+
+        itemTelegramRepository.deleteById(id);
+    }
 }
