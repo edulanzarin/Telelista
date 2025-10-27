@@ -39,5 +39,5 @@ public class ItemTelegram {
     private Usuario dono;
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Boosts> boosts;
+    private List<Boost> boosts;
 }
