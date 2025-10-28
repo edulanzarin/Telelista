@@ -11,6 +11,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.FetchType;
 import lombok.Data;
 
 import java.util.UUID;
@@ -35,6 +36,10 @@ public class ItemTelegram {
     @ManyToOne
     @JoinColumn(name = "dono_usuario_id", nullable = false)
     private Usuario dono;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "categoria_id", nullable = false)
+    private Categoria categoria;
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Boost> boosts;
