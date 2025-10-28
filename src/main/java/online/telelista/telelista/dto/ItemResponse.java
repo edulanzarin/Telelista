@@ -7,6 +7,7 @@ import java.util.UUID;
 
 @Data
 public class ItemResponse {
+    // TODO: implementar lógica de categoria
 
     private UUID id;
     private String nome;
@@ -23,4 +24,5 @@ public class ItemResponse {
         this.tipo = item.getTipo();
         this.donoNome = item.getDono().getUsername();
     }
+
 }
