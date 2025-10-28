@@ -1,7 +1,5 @@
 package online.telelista.telelista.model;
 
-import online.telelista.telelista.model.Boost;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;

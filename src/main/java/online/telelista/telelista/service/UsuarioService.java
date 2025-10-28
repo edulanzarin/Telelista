@@ -1,5 +1,7 @@
 package online.telelista.telelista.service;
 
+import online.telelista.telelista.dto.ChangePasswordRequest;
+import online.telelista.telelista.exception.InvalidPasswordException;
 import online.telelista.telelista.model.Usuario;
 import online.telelista.telelista.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +29,25 @@ public class UsuarioService implements UserDetailsService {
     }
 
     public Usuario cadastrarUsuario(Usuario usuario) {
+
         String senhaPura = usuario.getSenha();
         String senhaCriptografada = passwordEncoder.encode(senhaPura);
         usuario.setSenha(senhaCriptografada);
         return usuarioRepository.save(usuario);
+    }
+
+    public void alterarSenha(UserDetails userDetails, ChangePasswordRequest request) {
+
+        String username = userDetails.getUsername();
+        Usuario usuario = usuarioRepository.findByUsuario(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+
+        if (!passwordEncoder.matches(request.getOldPassword(), usuario.getPassword())) {
+            throw new InvalidPasswordException("Senha antiga incorreta.");
+        }
+
+        String novaSenhaCriptografada = passwordEncoder.encode(request.getNewPassword());
+        usuario.setSenha(novaSenhaCriptografada);
+        usuarioRepository.save(usuario);
     }
 }
