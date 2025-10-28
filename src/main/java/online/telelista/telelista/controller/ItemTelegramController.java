@@ -10,8 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.UUID;
 import java.util.Optional;
@@ -36,14 +37,14 @@ public class ItemTelegramController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ItemResponse>> listarTodos() {
-        List<ItemTelegram> listaDeItens = itemTelegramService.listarTodos();
+    public ResponseEntity<Page<ItemResponse>> listarTodos(Pageable pageable) {
 
-        List<ItemResponse> responseList = listaDeItens.stream()
-                .map(item -> new ItemResponse(item))
-                .collect(Collectors.toList());
+        Page<ItemTelegram> paginaDeItens = itemTelegramService.listarTodos(pageable);
 
-        return ResponseEntity.ok(responseList);
+        Page<ItemResponse> paginaDeResponse = paginaDeItens
+                .map(item -> new ItemResponse(item));
+
+        return ResponseEntity.ok(paginaDeResponse);
     }
 
     @GetMapping("/{id}")
