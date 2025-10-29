@@ -4,8 +4,10 @@ import online.telelista.telelista.dto.CreateItemRequest;
 import online.telelista.telelista.dto.UpdateItemRequest;
 import online.telelista.telelista.model.ItemTelegram;
 import online.telelista.telelista.model.Usuario;
+import online.telelista.telelista.model.Categoria;
 import online.telelista.telelista.repository.ItemTelegramRepository;
 import online.telelista.telelista.repository.UsuarioRepository;
+import online.telelista.telelista.repository.CategoriaRepository;
 import online.telelista.telelista.exception.AccessDeniedException;
 import online.telelista.telelista.exception.ItemNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,9 @@ public class ItemTelegramService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private CategoriaRepository categoriaRepository;
+
     public ItemTelegram cadastrarItem(CreateItemRequest request, UserDetails userDetails) {
 
         String username = userDetails.getUsername();
@@ -35,13 +40,17 @@ public class ItemTelegramService {
         Usuario dono = usuarioRepository.findByUsuario(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
 
+        Categoria categoria = categoriaRepository.findById(request.getCategoriaId())
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Categoria não encontrada para o ID: " + request.getCategoriaId()));
+
         ItemTelegram novoItem = new ItemTelegram();
         novoItem.setNome(request.getNome());
         novoItem.setLink(request.getLink());
         novoItem.setDescricao(request.getDescricao());
         novoItem.setTipo(request.getTipo());
-
         novoItem.setDono(dono);
+        novoItem.setCategoria(categoria);
 
         return itemTelegramRepository.save(novoItem);
     }
